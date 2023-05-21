@@ -14,7 +14,7 @@ const addNoteHandler = (request, h) => {
     id, title, tags, body, createdAt, updatedAt,
   };
 
-  // ngepsh array note dan diisi sesuai inputan user
+  // ngepush array note dan diisi sesuai inputan user
   notes.push(newNotes);
   // ngecek apkah user sudah ada
   const isSuccses = notes.filter((note) => note.id === id).length > 0;
@@ -27,7 +27,7 @@ const addNoteHandler = (request, h) => {
         noteId: id,
       },
     });
-
+    response.header('Access-Control-Allow-Origin', '*');
     response.code(201);
     return response;
   }
@@ -36,8 +36,17 @@ const addNoteHandler = (request, h) => {
     status: 'failed',
     message: 'Catatan gagal dibuat karena id sudah ada',
   });
+  response.header('Access-Control-Allow-Origin', '*');
+
   response.code(500);
   return response;
 };
 
-module.exports = addNoteHandler;
+const getAllNotesHandler = () => ({
+  status: 'success',
+  data: {
+    notes,
+  },
+});
+
+module.exports = { addNoteHandler, getAllNotesHandler };
