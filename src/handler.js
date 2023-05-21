@@ -7,7 +7,7 @@ const addNoteHandler = (request, h) => {
 
   const id = nanoid(16);
 
-  const createdAt = new Date().toISOString;
+  const createdAt = new Date().toISOString();
   const updatedAt = createdAt;
 
   const newNotes = {
@@ -73,4 +73,41 @@ const getNotesByIdHandler = (request, h) => {
   return response;
 };
 
-module.exports = { addNoteHandler, getAllNotesHandler, getNotesByIdHandler };
+const editNotesByIdHanler = (request, h) => {
+  const { id } = request.params;
+
+  const { title, tags, body } = request.payload;
+  const updatedAt = new Date().toISOString();
+  const index = notes.findIndex((note) => note.id === id);
+
+  if (index !== -1) {
+    notes[index] = {
+      ...notes.index,
+      title,
+      tags,
+      body,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: `catatan ${id} berhasil di update`,
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'failed',
+    message: `catatan ${id} tidak ditemukan`,
+  });
+  response.code(400);
+  return response;
+};
+
+module.exports = {
+  addNoteHandler,
+  getAllNotesHandler,
+  getNotesByIdHandler,
+  editNotesByIdHanler,
+};
